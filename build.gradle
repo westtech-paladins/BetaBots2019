@@ -51,6 +51,8 @@ repositories {
 dependencies {
     compile wpi.deps.wpilib()
     compile wpi.deps.vendor.java()
+    //compile 'com.ctre.phoenix:api-java:5.14.1'
+    //nativeZip 'com.ctre.phoenix:api-java:5.14.1'
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
     testCompile 'junit:junit:4.12'
