@@ -12,10 +12,10 @@ package frc.robot;
  * significantly reduces the number of magic numbers floating around.
  */
 public class RobotMap {
-	public static final int LEFT_MOTOR   = 0;
-	public static final int RIGHT_MOTOR  = 1;
-	public static final int ARM_MOTOR_I  = 2;
-	public static final int ARM_MOTOR_II = 3;
+	public static final int LEFT_MOTOR  = 0;
+	public static final int RIGHT_MOTOR = 1;
+	public static final int ARM_MOTOR   = 0;
+	public static final int TOWER_MOTOR = 1;
 	
 	public static final int DRIVER_XBOX  = 0;
 	public static final int ARM_JOYSTICK = 1;
