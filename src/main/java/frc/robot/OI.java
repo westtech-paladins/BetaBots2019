@@ -7,8 +7,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import frc.robot.commands.RotateArmTimed;
 
 
 /**
@@ -16,9 +19,17 @@ import edu.wpi.first.wpilibj.XboxController;
  */
 public class OI {
 	/** This is the controller for the driver. It is going to be the xbox controller and the driver will control the robot by using the two joysticks on it for tank drive. */
-	public XboxController driverController = new XboxController(RobotMap.DRIVER_XBOX);
+	public static Joystick      driverController = new Joystick(RobotMap.DRIVER_XBOX);
 	/** I'm going to register commands to this, rather than having each of the motors individually controller by the joystick. */
-	public Joystick       armController    = new Joystick(RobotMap.ARM_JOYSTICK);
+	public static Joystick      armController    = new Joystick(RobotMap.ARM_JOYSTICK);
+	public static Button        armTrigger       = new JoystickButton(driverController, 1);
+	/**
+	 * Driver station instance. Used to get & set values.
+	 */
+	public static DriverStation ds               = DriverStation.getInstance();
+	static {
+		armTrigger.whenPressed(new RotateArmTimed());
+	}
 	
 	//// CREATING BUTTONS
 	// One type of button is a joystick button which is any button on a
