@@ -9,20 +9,19 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import frc.robot.RobotMap;
+import frc.robot.commands.DriveInput;
 
 
 @SuppressWarnings("DanglingJavadoc") public class DriveTrain extends Subsystem {
+	private double    lastMaxSpeed;
 	/** Comment these out if you want to use PWM. Leave them here if you want to use CANbus. */
-	VictorSPX leftMotor;
+	private VictorSPX leftMotor;
 	/** Comment these out if you want to use PWM. Leave them here if you want to use CANbus. */
-	VictorSPX rightMotor;
-	
-	VictorSPX armMotorI;
-	VictorSPX armMotorII;
-	
+	private VictorSPX rightMotor;
+	private PWM       towerMotor;
 	
 	/** Uncomment these if you want to use PWM Leave them commented out if you want to use CANbus */
 	//PWMVictorSPX  leftMotor;
@@ -35,8 +34,20 @@ import frc.robot.RobotMap;
 	public DriveTrain() {
 		this.leftMotor = new VictorSPX(RobotMap.LEFT_MOTOR);
 		this.rightMotor = new VictorSPX(RobotMap.RIGHT_MOTOR);
-		this.armMotorI = new VictorSPX(RobotMap.ARM_MOTOR_I);
-		this.armMotorII = new VictorSPX(RobotMap.ARM_MOTOR_II);
+		this.lastMaxSpeed = 0.00;
+		
+		this.towerMotor = new PWM(RobotMap.TOWER_MOTOR);
+		
+		/*
+		towerMotor.setBounds(1, 1.55, 1.5, 1.47, 2);
+		armMotor.setBounds(1, 1.55, 1.5, 1.47, 2);
+		 */
+		
+		
+		//leftMotor.setInverted(true);
+		//rightMotor.setInverted(true);
+		//this.towerMotor = new VictorSPX(RobotMap.TOWER_MOTOR);
+		//this.armMotor = new VictorSPX(RobotMap.ARM_MOTOR);
 		/*
 		this.leftMotor = new PWMVictorSPX(RobotMap.LEFT_MOTOR);
 		this.leftMotor = new PWMVictorSPX(RobotMap.RIGHT_MOTOR);
@@ -44,7 +55,16 @@ import frc.robot.RobotMap;
 	}
 	
 	@Override
-	public void initDefaultCommand() { }
+	public void initDefaultCommand() {
+		// Set the default command for a subsystem here.
+		setDefaultCommand(new DriveInput());
+	}
+	
+	public void arcadeDrive(double moveSpeed, double rotateAngle) {
+		
+		
+		arcadeDrive(moveSpeed, rotateAngle, 0.005);
+	}
 	
 	/**
 	 * @param moveSpeed
@@ -52,10 +72,12 @@ import frc.robot.RobotMap;
 	 * @param rotateAngle
 	 * 		The angle at which you want the robot to move. [-1.0..1.0]. Clockwise is positive.
 	 */
-	public void arcadeDrive(double moveSpeed, double rotateAngle) {
+	public void arcadeDrive(double moveSpeed, double rotateAngle, double maxSpeedPerTick) {
+		
 		
 		moveSpeed = applyDeadband(limit(moveSpeed), 0.02);
 		rotateAngle = applyDeadband(limit(rotateAngle), 0.02);
+		
 		
 		// Square the inputs (while preserving the sign) to increase fine control
 		// while permitting full power.
@@ -65,7 +87,16 @@ import frc.robot.RobotMap;
 		double leftMotorOutput;
 		double rightMotorOutput;
 		
+		
+		if (moveSpeed > 0 && lastMaxSpeed < moveSpeed) {
+			moveSpeed = Math.min(lastMaxSpeed + maxSpeedPerTick, moveSpeed);
+		} else {
+			if (moveSpeed < 0 && lastMaxSpeed > moveSpeed) {
+				moveSpeed = Math.max(lastMaxSpeed - maxSpeedPerTick, moveSpeed);
+			}
+		}
 		double maxInput = Math.copySign(Math.max(Math.abs(moveSpeed), Math.abs(rotateAngle)), moveSpeed);
+		
 		
 		if (moveSpeed >= 0.0) {
 			// First quadrant, else second quadrant
@@ -87,8 +118,11 @@ import frc.robot.RobotMap;
 			}
 		}
 		
+		
 		leftMotor.set(ControlMode.PercentOutput, limit(leftMotorOutput));
 		rightMotor.set(ControlMode.PercentOutput, limit(rightMotorOutput) * -1.0);
+		
+		lastMaxSpeed = moveSpeed;
 	}
 	
 	/**
@@ -99,7 +133,7 @@ import frc.robot.RobotMap;
 	 * @param deadband
 	 * 		range around zero
 	 */
-	protected double applyDeadband(double value, double deadband) {
+	private double applyDeadband(double value, double deadband) {
 		if (Math.abs(value) > deadband) {
 			if (value > 0.0) {
 				return (value - deadband) / (1.0 - deadband);
@@ -111,7 +145,7 @@ import frc.robot.RobotMap;
 		}
 	}
 	
-	protected double limit(double value) {
+	private double limit(double value) {
 		if (value > 1.0) {
 			return 1.0;
 		}
