@@ -29,7 +29,7 @@ public class RightDump extends Command {
 	@Override
 	protected void execute() {
 		System.out.println("right");
-		Robot.armMotor.setMotorSpeed(0.75);
+		Robot.armMotor.setMotorSpeed(-0.75);
 	}
 	
 	// Make this return true when this Command no longer needs to run execute()

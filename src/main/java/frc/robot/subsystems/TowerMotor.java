@@ -26,9 +26,9 @@ public class TowerMotor extends Subsystem {
 			setMotorSpeed(0);
 		} else {
 			if (pov >= 180) {
-				setMotorSpeed(1);
-			} else {
 				setMotorSpeed(-1);
+			} else {
+				setMotorSpeed(1);
 			}
 		}
 	}

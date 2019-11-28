@@ -30,7 +30,7 @@ public class LeftDump extends Command {
 	@Override
 	protected void execute() {
 		System.out.println("left");
-		Robot.armMotor.setMotorSpeed(-.75);
+		Robot.armMotor.setMotorSpeed(.75);
 	}
 	
 	// Make this return true when this Command no longer needs to run execute()

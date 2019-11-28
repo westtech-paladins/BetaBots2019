@@ -17,6 +17,7 @@ import frc.robot.commands.DriveInput;
 
 @SuppressWarnings("DanglingJavadoc") public class DriveTrain extends Subsystem {
 	private double    lastMaxSpeed;
+	private double    lastRotateAngle;
 	/** Comment these out if you want to use PWM. Leave them here if you want to use CANbus. */
 	private VictorSPX leftMotor;
 	/** Comment these out if you want to use PWM. Leave them here if you want to use CANbus. */
@@ -34,6 +35,7 @@ import frc.robot.commands.DriveInput;
 		this.leftMotor = new VictorSPX(RobotMap.LEFT_MOTOR);
 		this.rightMotor = new VictorSPX(RobotMap.RIGHT_MOTOR);
 		this.lastMaxSpeed = 0.00;
+		this.lastRotateAngle = 0.00;
 		
 		/*
 		towerMotor.setBounds(1, 1.55, 1.5, 1.47, 2);
@@ -60,7 +62,7 @@ import frc.robot.commands.DriveInput;
 	public void arcadeDrive(double moveSpeed, double rotateAngle) {
 		
 		
-		arcadeDrive(moveSpeed, rotateAngle, 0.005);
+		arcadeDrive(moveSpeed, rotateAngle, 0.005, 0.005);
 	}
 	
 	/**
@@ -69,7 +71,7 @@ import frc.robot.commands.DriveInput;
 	 * @param rotateAngle
 	 * 		The angle at which you want the robot to move. [-1.0..1.0]. Clockwise is positive.
 	 */
-	public void arcadeDrive(double moveSpeed, double rotateAngle, double maxSpeedPerTick) {
+	public void arcadeDrive(double moveSpeed, double rotateAngle, double maxSpeedPerTick, double maxRotatePerTick) {
 		
 		
 		moveSpeed = applyDeadband(limit(moveSpeed), 0.02);
@@ -84,6 +86,13 @@ import frc.robot.commands.DriveInput;
 		double leftMotorOutput;
 		double rightMotorOutput;
 		
+		if (rotateAngle > 0 && lastRotateAngle < rotateAngle) {
+			rotateAngle = Math.min(lastRotateAngle + maxRotatePerTick, rotateAngle);
+		} else {
+			if (rotateAngle < 0 && lastRotateAngle > rotateAngle) {
+				rotateAngle = Math.max(lastRotateAngle - maxRotatePerTick, rotateAngle);
+			}
+		}
 		
 		if (moveSpeed > 0 && lastMaxSpeed < moveSpeed) {
 			moveSpeed = Math.min(lastMaxSpeed + maxSpeedPerTick, moveSpeed);
@@ -120,6 +129,7 @@ import frc.robot.commands.DriveInput;
 		rightMotor.set(ControlMode.PercentOutput, limit(rightMotorOutput) * -1.0);
 		
 		lastMaxSpeed = moveSpeed;
+		lastRotateAngle = rotateAngle;
 	}
 	
 	/**
