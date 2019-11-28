@@ -20,6 +20,7 @@ public class DriveInput extends Command {
 	public DriveInput() {
 		// Use requires() here to declare subsystem dependencies
 		requires(Robot.driveTrainSubsystem);
+		requires(Robot.towerMotor);
 	}
 	
 	// Called just before this Command runs the first time
@@ -31,7 +32,10 @@ public class DriveInput extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		Robot.driveTrainSubsystem.arcadeDrive(OI.driverController.getY(), (Math.abs(OI.driverController.getX()) > Math.abs(OI.driverController.getZ()) ? OI.driverController.getX() : OI.driverController.getZ()));
+		Robot.driveTrainSubsystem.arcadeDrive(OI.driverController.getY(), (Math.abs(OI.driverController.getX()) > Math.abs(OI.driverController.getZ())
+																		   ? OI.driverController.getX()
+																		   : OI.driverController.getZ()));
+		Robot.towerMotor.usePOV(OI.driverController.getPOV());
 	}
 	
 	// Make this return true when this Command no longer needs to run execute()
