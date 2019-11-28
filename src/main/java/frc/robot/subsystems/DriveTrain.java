@@ -21,7 +21,6 @@ import frc.robot.commands.DriveInput;
 	private VictorSPX leftMotor;
 	/** Comment these out if you want to use PWM. Leave them here if you want to use CANbus. */
 	private VictorSPX rightMotor;
-	private PWM       towerMotor;
 	
 	/** Uncomment these if you want to use PWM Leave them commented out if you want to use CANbus */
 	//PWMVictorSPX  leftMotor;
@@ -35,8 +34,6 @@ import frc.robot.commands.DriveInput;
 		this.leftMotor = new VictorSPX(RobotMap.LEFT_MOTOR);
 		this.rightMotor = new VictorSPX(RobotMap.RIGHT_MOTOR);
 		this.lastMaxSpeed = 0.00;
-		
-		this.towerMotor = new PWM(RobotMap.TOWER_MOTOR);
 		
 		/*
 		towerMotor.setBounds(1, 1.55, 1.5, 1.47, 2);
