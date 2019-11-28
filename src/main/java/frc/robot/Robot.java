@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.ArmMotor;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.TowerMotor;
 
 
 /**
@@ -21,9 +22,10 @@ import frc.robot.subsystems.DriveTrain;
  * of this class or the package after creating this project, you must also update the build.gradle file in the project.
  */
 public class Robot extends TimedRobot {
-	public static OI               OI;
-	public static DriveTrain       driveTrainSubsystem;
-	public static ArmMotor         armMotor = new ArmMotor();
+	public static OI         OI;
+	public static DriveTrain driveTrainSubsystem;
+	public static ArmMotor   armMotor   = new ArmMotor();
+	public static TowerMotor towerMotor = new TowerMotor();
 	
 	Command                  m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
