@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.commands.LeftDump;
 import frc.robot.commands.RightDump;
-import frc.robot.commands.RotateArmTimed;
 
 
 /**
@@ -30,7 +29,6 @@ public class OI {
 	 */
 	public static DriverStation ds               = DriverStation.getInstance();
 	static {
-		armTrigger.whenPressed(new RotateArmTimed());
 		dumpLeft.whileHeld(new LeftDump());
 		dumpRighht.whileHeld(new RightDump());
 		
